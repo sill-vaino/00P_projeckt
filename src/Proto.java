@@ -32,7 +32,7 @@ public class Proto {
             System.out.println("============================");
             System.out.println("Toode: ");
             Scanner scan = new Scanner(System.in);
-            String vastus = scan.nextLine();
+            String vastus = scan.nextLine().toUpperCase();
 
             if (Objects.equals(vastus, "ei")) {
                 toe = false;
@@ -82,7 +82,7 @@ public class Proto {
             String[][] tooted = new String[ridade_arv(failinimi)][2];
             for (int i = 0; i < ridade_arv(failinimi); i++) {
                 String[] el = tooted_1[i].split("; ");
-                tooted[i][0] = el[0];
+                tooted[i][0] = el[0].toUpperCase();
                 tooted[i][1] = el[1];
             }
             return tooted;
