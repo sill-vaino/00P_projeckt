@@ -7,7 +7,7 @@ public class tooted {
 
     //peameetod
     public static void main(String[] args) throws FileNotFoundException {
-        System.out.println("Uus");
+        //haha, seda pole enam. ise oled jobu.
     }
 
     //meetod mis paneb failis olevad tooted koos hinnaga eraldi massiivi(tootenimi, hind)
