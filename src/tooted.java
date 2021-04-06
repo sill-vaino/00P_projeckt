@@ -2,7 +2,7 @@ import java.io.File;  // impordib faili klassi
 import java.io.FileNotFoundException;  // errorite jaoks
 import java.util.Arrays;
 import java.util.Scanner; // et tekstifaile lugeda
-
+//Testin siin asju onju
 public class tooted {
 
     //peameetod
