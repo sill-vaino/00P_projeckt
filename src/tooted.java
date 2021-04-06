@@ -7,12 +7,13 @@ public class tooted {
 
     //peameetod
     public static void main(String[] args) throws FileNotFoundException {
-        //haha, seda pole enam. ise oled jobu.
+
+
     }
 
     //meetod mis paneb failis olevad tooted koos hinnaga eraldi massiivi(tootenimi, hind)
     public static String[][] tooted_meetodisse(String failinimi) throws FileNotFoundException {
-        //Viib failis olema esmalt 체he dimensioonilisesse massiivi
+        //Viib failis olema esmalt ühe dimensioonilisesse massiivi
         File fail = new File(failinimi);
         String[] tooted_1 = new String[ridade_arv(failinimi)];
         try (java.util.Scanner lugeja = new java.util.Scanner(fail, "UTF-8")) {
@@ -24,7 +25,7 @@ public class tooted {
             }
             lugeja.close();
 
-            //Viib 체he dimensioonilise massiivi kahe dimensioonilise massiivi kujule
+            //Viib ühe dimensioonilise massiivi kahe dimensioonilise massiivi kujule
             String[][] tooted = new String[ridade_arv(failinimi)][2];
             for (int i = 0; i < ridade_arv(failinimi); i++) {
                 String[] el = tooted_1[i].split("; ");
@@ -47,7 +48,7 @@ public class tooted {
         return rida;
     }
 
-    //See meetod arvutab kasutaja tehtud nimekirja j채rgi tal poesk채igul kuluva summa.
+    //See meetod arvutab kasutaja tehtud nimekirja järgi tal poeskäigul kuluva summa.
     public static float Kokku(String[][] tooted) {
         float kokku = 0;
         for (String[] element : tooted) {

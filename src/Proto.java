@@ -19,13 +19,12 @@ public class Proto {
     }
 
 
-
     public static String[][] ostukorv(String[][] tooted) throws FileNotFoundException {
         ArrayList<String> valikud = new ArrayList<>();
 
         boolean toe = true;
 
-        while(toe) {
+        while (toe) {
             System.out.println("==========Tooted===========");
             for (int i = 0; i < tooted.length; i++) {
                 System.out.println(tooted[i][0] + "...." + tooted[i][1] + " €");
@@ -35,18 +34,18 @@ public class Proto {
             Scanner scan = new Scanner(System.in);
             String vastus = scan.nextLine();
 
-            if(Objects.equals(vastus, "ei")) {
+            if (Objects.equals(vastus, "ei")) {
                 toe = false;
 
-            }else{
-                if(kas_on_olemas(vastus ,tooted_failist_meetodisse("tooted.txt"))){
+            } else {
+                if (kas_on_olemas(vastus, tooted_failist_meetodisse("tooted.txt"))) {
                     System.out.println("Kogus: ");
                     int kogus = scan.nextInt();
                     for (int j = 0; j < kogus; j++) {
                         valikud.add(vastus);
                     }
                     toe = true;
-                }else{
+                } else {
                     System.out.println("Toodet ei leitud :(");
                 }
             }
@@ -55,7 +54,7 @@ public class Proto {
 
         for (String[] el : tooted) {
             for (int i = 0; i < valikud.size(); i++) {
-                if(el[0].equals(valikud.get(i))) {
+                if (el[0].equals(valikud.get(i))) {
                     ostukorvi[i][0] = el[0];
                     ostukorvi[i][1] = el[1];
                 }
@@ -63,8 +62,6 @@ public class Proto {
         }
         return ostukorvi;
     }
-
-
 
 
     //meetod mis paneb failis olevad tooted koos hinnaga eraldi massiivi(tootenimi, hind)
@@ -111,15 +108,16 @@ public class Proto {
             float ost = Float.parseFloat(element[1]);
             kokku = kokku + ost;
         }
-        return Math.round(kokku * 100.0)/100.0;
+        return Math.round(kokku * 100.0) / 100.0;
     }
 
-    public static boolean kas_on_olemas(String toode, String[][] tooted){
+    public static boolean kas_on_olemas(String toode, String[][] tooted) {
         boolean vastus = false;
         for (String[] el : tooted) {
-            if(el[0].equals(toode)) {
+            if (el[0].equals(toode)) {
                 vastus = true;
             }
-        }return vastus;
+        }
+        return vastus;
     }
 }
