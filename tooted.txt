@@ -1,0 +1,6 @@
+Piim; 0.5
+Milka šokolaad; 1.2
+Kaneelirull; 0.7
+Must leib; 0.8
+Jäätis; 1.1
+Pelmeenid; 1.5
