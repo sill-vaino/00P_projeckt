@@ -9,7 +9,13 @@ import java.util.Scanner; // et tekstifaile lugeda
 public class Proto {
     //peameetod
     public static void main(String[] args) throws FileNotFoundException {
-        System.out.println(ostukorv(tooted_failist_meetodisse("tooted.txt")));
+        String[][] ostukorv = ostukorv(tooted_failist_meetodisse("tooted.txt"));
+
+        for (String[] el : ostukorv) {
+            System.out.println(Arrays.toString(el));
+        }
+        System.out.println("============================");
+        System.out.println("Kokku läheb " + Kokku(ostukorv) + " €");
     }
 
 
@@ -20,6 +26,11 @@ public class Proto {
         boolean toe = true;
 
         while(toe) {
+            System.out.println("==========Tooted===========");
+            for (int i = 0; i < tooted.length; i++) {
+                System.out.println(tooted[i][0] + "...." + tooted[i][1] + " €");
+            }
+            System.out.println("============================");
             System.out.println("Toode: ");
             Scanner scan = new Scanner(System.in);
             String vastus = scan.nextLine();
@@ -40,8 +51,17 @@ public class Proto {
                 }
             }
         }
+        String[][] ostukorvi = new String[valikud.size()][2];
 
-
+        for (String[] el : tooted) {
+            for (int i = 0; i < valikud.size(); i++) {
+                if(el[0].equals(valikud.get(i))) {
+                    ostukorvi[i][0] = el[0];
+                    ostukorvi[i][1] = el[1];
+                }
+            }
+        }
+        return ostukorvi;
     }
 
 
@@ -85,13 +105,13 @@ public class Proto {
     }
 
     //See meetod arvutab kasutaja tehtud nimekirja järgi tal poeskäigul kuluva summa.
-    public static float Kokku(String[][] tooted) {
+    public static double Kokku(String[][] tooted) {
         float kokku = 0;
         for (String[] element : tooted) {
             float ost = Float.parseFloat(element[1]);
             kokku = kokku + ost;
         }
-        return kokku;
+        return Math.round(kokku * 100.0)/100.0;
     }
 
     public static boolean kas_on_olemas(String toode, String[][] tooted){
