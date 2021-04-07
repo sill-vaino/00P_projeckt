@@ -14,7 +14,8 @@ public class Proto {
 
         System.out.println("============================");
         for (String[] el : ostukorv) {
-            System.out.println(el[0] + "...." + el[1] + " €");
+            Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
+            System.out.println(toode.toString());
         }
         System.out.println("============================");
         System.out.println("Kokku läheb " + Kokku(ostukorv) + " €");
@@ -27,9 +28,10 @@ public class Proto {
         boolean toe = true;
 
         while (toe) {
-            System.out.println("==========Tooted===========");
-            for (int i = 0; i < tooted.length; i++) {
-                System.out.println(tooted[i][0] + "...." + tooted[i][1] + " €");
+            System.out.println("==========Tooted============");
+            for (String[] el : tooted) {
+                Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
+                System.out.println(toode.toString());
             }
             System.out.println("============================");
             System.out.println("Toode: ");
@@ -57,8 +59,9 @@ public class Proto {
         for (String[] el : tooted) {
             for (int i = 0; i < valikud.size(); i++) {
                 if (el[0].equals(valikud.get(i))) {
-                    ostukorvi[i][0] = el[0];
-                    ostukorvi[i][1] = el[1];
+                    Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
+                    ostukorvi[i][0] = toode.getToode();
+                    ostukorvi[i][1] = String.valueOf(toode.getHind());
                 }
             }
         }
@@ -84,8 +87,9 @@ public class Proto {
             String[][] tooted = new String[ridade_arv(failinimi)][2];
             for (int i = 0; i < ridade_arv(failinimi); i++) {
                 String[] el = tooted_1[i].split("; ");
-                tooted[i][0] = el[0].toUpperCase();
-                tooted[i][1] = el[1];
+                Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
+                tooted[i][0] = toode.getToode().toUpperCase();
+                tooted[i][1] = String.valueOf(toode.getHind());
             }
             return tooted;
         }
@@ -105,7 +109,7 @@ public class Proto {
 
     //See meetod arvutab kasutaja tehtud nimekirja järgi tal poeskäigul kuluva summa.
     public static double Kokku(String[][] tooted) {
-        float kokku = 0;
+        double kokku = 0;
         for (String[] element : tooted) {
             float ost = Float.parseFloat(element[1]);
             kokku = kokku + ost;
