@@ -7,7 +7,7 @@ import java.util.Scanner; // et tekstifaile lugeda
 
 
 public class Proto {
-    //peameetod
+    //peameetod f
     public static void main(String[] args) throws FileNotFoundException {
         String[][] ostukorv = ostukorv(tooted_failist_meetodisse("tooted.txt"));
 
