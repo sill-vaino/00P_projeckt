@@ -6,29 +6,19 @@ import java.util.Scanner; // et tekstifaile lugeda
 
 
 public class Proto {
-    //peameetod f
+    //peameetod
     public static void main(String[] args) throws FileNotFoundException {
         String[][] ostukorv = ostukorv(tooted_failist_meetodisse("tooted.txt"));
-
-        /*
-        System.out.println("============================");
-        for (String[] el : ostukorv) {
-            Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
-            System.out.println(toode.toString());
-        }
-        System.out.println("============================");
-        System.out.println("Kokku läheb " + Kokku(ostukorv) + " €");
-
-         */
         String[] converditud = ostukorvi_converter(ostukorv);
         faas(converditud);
     }
 
-    public static void faas(String[] converditud) throws FileNotFoundException {
+    //Viimane meetod, mis kuvab ostukorvis olevad tooted kasutajale ning märgib ära valitud tooted
+    public static void faas(String[] converditud){
 
-        System.out.println("====Tooted on ostukorvi lisatud====");
+        System.out.println("====Tooted on lisatud ostukorvi====");
         Scanner sisestus = new Scanner(System.in);
-        System.out.println("Jätkamiseks vajutage ENTERit");
+        System.out.println("!Jätkamiseks vajutage ENTERit!");
         sisestus.nextLine();
 
         int i = 1;
@@ -39,8 +29,8 @@ public class Proto {
         }
         System.out.println("============================");
 
-        boolean tõene = true;
-        while (tõene) {
+        boolean toene = true;
+        while (toene) {
             int n = 1;
             System.out.println("Lisan korvi toote number: ");
             Scanner scan = new Scanner(System.in);
@@ -49,15 +39,13 @@ public class Proto {
             int f = 0;
 
             if (foo == 0) { //Kui sisestad "0", siis programm lõpetab töö
-                System.out.println("Programm katkestati");
-                tõene = false;
+                System.out.println("!!!Programm katkestati!!!");
+                toene = false;
             }else if (foo > converditud.length){
-                System.out.println("Sellist toodet ei eksisteeri!");
-                continue;
+                System.out.println("!!Sellist toodet ei eksisteeri!!");
 
             } else if (converditud[foo - 1].contains("+")) {
-                System.out.println("See toode on juba korvis!");
-                continue;
+                System.out.println("!See toode on juba korvis!");
             } else {
                 converditud[foo - 1] += " +";
                 System.out.println("========OSTUNIMEKIRI=======");
@@ -72,13 +60,14 @@ public class Proto {
                     }
                 }
                 if (f == converditud.length) {
-                    System.out.println("Kõik tooted on korvis.");
-                    tõene = false;
+                    System.out.println("!Kõik tooted on korvis!" +" \n" + "Suunduge kassasse");
+                    toene = false;
                 }
             }
         }
     }
 
+    //See meetod on meetodi ostukorv() ja faas()-i vahesamm
     public static String[] ostukorvi_converter(String[][] ostukorv) {
         String[] converditud = new String[ostukorv.length];
 
@@ -90,6 +79,8 @@ public class Proto {
         return converditud;
     }
 
+    //See meetod teeb Küsib kasutajalt tootedi, mida ostukorvi lisada, ning lisab need
+    //koos hindadega eraldi massiivi
     public static String[][] ostukorv(String[][] tooted) throws FileNotFoundException {
         ArrayList<String> valikud = new ArrayList<>();
 
@@ -122,6 +113,7 @@ public class Proto {
                 }
             }
         }
+
         String[][] ostukorvi = new String[valikud.size()][2];
 
         for (String[] el : tooted) {
@@ -133,9 +125,10 @@ public class Proto {
                 }
             }
         }
+        System.out.println("_____________________________");
+        System.out.println("Kokku: " + Kokku(ostukorvi) + " €");
         return ostukorvi;
     }
-
 
     //meetod mis paneb failis olevad tooted koos hinnaga eraldi massiivi(tootenimi, hind)
     public static String[][] tooted_failist_meetodisse(String failinimi) throws FileNotFoundException {
@@ -175,17 +168,18 @@ public class Proto {
         return rida;
     }
 
-    //See meetod arvutab kasutaja tehtud nimekirja järgi tal poeskäigul kuluva summa.
-    public static double Kokku(ArrayList<String> tooted) {
-        double kokku = 0;
-        for (int i = 0; i < tooted.size(); i++) {
-            String[] elem = tooted.get(i).split("; ");
-            kokku = kokku + Double.parseDouble(elem[1]);
+    //See meetod arvutab kasutaja tehtud nimekirja järgi tal poeskäigul kuluva summa (eurodes)
+    public static double Kokku(String[][] tooted) {
+        double kokku = 0.0;
+        for (String[] el : tooted) {
+            Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
+            kokku = kokku + toode.getHind();
         }
 
         return Math.round(kokku * 100.0) / 100.0;
     }
 
+    //See meetod teeb kindlaks, kas antud element(String) on massiivis olemas
     public static boolean kas_on_olemas(String toode, String[][] tooted) {
         boolean vastus = false;
         for (String[] el : tooted) {
