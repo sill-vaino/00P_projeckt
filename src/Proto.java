@@ -11,8 +11,10 @@ public class Proto {
     public static void main(String[] args) throws FileNotFoundException {
         String[][] ostukorv = ostukorv(tooted_failist_meetodisse("tooted.txt"));
 
+
+        System.out.println("============================");
         for (String[] el : ostukorv) {
-            System.out.println(Arrays.toString(el));
+            System.out.println(el[0] + "...." + el[1] + " €");
         }
         System.out.println("============================");
         System.out.println("Kokku läheb " + Kokku(ostukorv) + " €");
@@ -34,7 +36,7 @@ public class Proto {
             Scanner scan = new Scanner(System.in);
             String vastus = scan.nextLine().toUpperCase();
 
-            if (Objects.equals(vastus, "ei")) {
+            if (Objects.equals(vastus, "EI")) {
                 toe = false;
 
             } else {
