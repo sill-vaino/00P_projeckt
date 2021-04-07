@@ -1,7 +1,6 @@
 import java.io.File;  // impordib faili klassi
 import java.io.FileNotFoundException;  // errorite jaoks
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner; // et tekstifaile lugeda
 
@@ -11,7 +10,7 @@ public class Proto {
     public static void main(String[] args) throws FileNotFoundException {
         String[][] ostukorv = ostukorv(tooted_failist_meetodisse("tooted.txt"));
 
-
+        /*
         System.out.println("============================");
         for (String[] el : ostukorv) {
             Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
@@ -19,8 +18,77 @@ public class Proto {
         }
         System.out.println("============================");
         System.out.println("Kokku läheb " + Kokku(ostukorv) + " €");
+
+         */
+        String[] converditud = ostukorvi_converter(ostukorv);
+        faas(converditud);
     }
 
+    public static void faas(String[] converditud) throws FileNotFoundException {
+
+        System.out.println("====Tooted on ostukorvi lisatud====");
+        Scanner sisestus = new Scanner(System.in);
+        System.out.println("Jätkamiseks vajutage ENTERit");
+        sisestus.nextLine();
+
+        int i = 1;
+        System.out.println("========OSTUNIMEKIRI=======");
+        for (String el : converditud) {
+            System.out.println(i + "." + el);
+            i++;
+        }
+        System.out.println("============================");
+
+        boolean tõene = true;
+        while (tõene) {
+            int n = 1;
+            System.out.println("Lisan korvi toote number: ");
+            Scanner scan = new Scanner(System.in);
+            String vastus = scan.nextLine();
+            int foo = Integer.parseInt(vastus);
+            int f = 0;
+
+            if (foo == 0) { //Kui sisestad "0", siis programm lõpetab töö
+                System.out.println("Programm katkestati");
+                tõene = false;
+            }else if (foo > converditud.length){
+                System.out.println("Sellist toodet ei eksisteeri!");
+                continue;
+
+            } else if (converditud[foo - 1].contains("+")) {
+                System.out.println("See toode on juba korvis!");
+                continue;
+            } else {
+                converditud[foo - 1] += " +";
+                System.out.println("========OSTUNIMEKIRI=======");
+                for (String el : converditud) {
+                    System.out.println(n + "." + el);
+                    n++;
+                }
+                System.out.println("============================");
+                for (String el : converditud) {
+                    if (el.contains("+")) {
+                        f++;
+                    }
+                }
+                if (f == converditud.length) {
+                    System.out.println("Kõik tooted on korvis.");
+                    tõene = false;
+                }
+            }
+        }
+    }
+
+    public static String[] ostukorvi_converter(String[][] ostukorv) {
+        String[] converditud = new String[ostukorv.length];
+
+        for (int i = 0; i < ostukorv.length; i++) {
+            Andmed toode = new Andmed(ostukorv[i][0], Double.parseDouble(ostukorv[i][1]));
+            String c_el = toode.toString();
+            converditud[i] = c_el;
+        }
+        return converditud;
+    }
 
     public static String[][] ostukorv(String[][] tooted) throws FileNotFoundException {
         ArrayList<String> valikud = new ArrayList<>();
@@ -108,12 +176,13 @@ public class Proto {
     }
 
     //See meetod arvutab kasutaja tehtud nimekirja järgi tal poeskäigul kuluva summa.
-    public static double Kokku(String[][] tooted) {
+    public static double Kokku(ArrayList<String> tooted) {
         double kokku = 0;
-        for (String[] element : tooted) {
-            float ost = Float.parseFloat(element[1]);
-            kokku = kokku + ost;
+        for (int i = 0; i < tooted.size(); i++) {
+            String[] elem = tooted.get(i).split("; ");
+            kokku = kokku + Double.parseDouble(elem[1]);
         }
+
         return Math.round(kokku * 100.0) / 100.0;
     }
 
@@ -122,6 +191,7 @@ public class Proto {
         for (String[] el : tooted) {
             if (el[0].equals(toode)) {
                 vastus = true;
+                break;
             }
         }
         return vastus;
