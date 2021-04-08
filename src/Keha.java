@@ -6,12 +6,6 @@ import java.util.Scanner;
 
 
 public class Keha {
-
-    //
-    public static void Start() throws FileNotFoundException {
-        ostukorv(tooted_failist_meetodisse("tooted.txt"));
-    }
-
     //Lühidalt: tegu on programmi n.ö kehaga (meetod ostukorv()), mis kasutab loodud meetodeid, et:
     // 1)Küsida kasutajalt soovitud tooteid koos kogustega
     // 2)Arvutada kokkumineva summa (eurodes)

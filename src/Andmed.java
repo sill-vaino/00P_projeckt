@@ -1,4 +1,5 @@
 public class Andmed {
+
     private String Toode;
     private double Hind;
 
