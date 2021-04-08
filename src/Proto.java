@@ -1,8 +1,8 @@
-import java.io.File;  // impordib faili klassi
-import java.io.FileNotFoundException;  // errorite jaoks
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Scanner; // et tekstifaile lugeda
+import java.util.Scanner;
 
 
 public class Proto {
