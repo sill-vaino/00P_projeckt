@@ -2,9 +2,10 @@ import java.util.Scanner;
 public class test {
     public static void main(String[] args) {
         String[] uus = {"piim....0.5€", "piim....0.5€", "must leib....0.8€", "must leib....0.8€", "must leib....0.8€"};
+        //String[][] uus = {{"piim", "0.5"},{"Must leib", "0,6"},{"Pelmeenid", "1.5"}};
+
+
         int i = 1;
-
-
         for (String el : uus) {
             System.out.println(i + "." + el);
             i++;
