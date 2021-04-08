@@ -5,57 +5,50 @@ import java.util.Objects;
 import java.util.Scanner;
 
 
-public class Proto {
-    //peameetod
+public class Keha {
 
+    //
     public static void Start() throws FileNotFoundException {
-        ostukorv(tooted_failist_meetodisse("tooted.txt"), true);
-    }
-    //See meetod on meetodi ostukorv() ja faas()-i vahesamm
-    public static String[] ostukorvi_converter(String[][] ostukorv) {
-        String[] converditud = new String[ostukorv.length];
-
-        for (int i = 0; i < ostukorv.length; i++) {
-            Andmed toode = new Andmed(ostukorv[i][0], Double.parseDouble(ostukorv[i][1]));
-            String c_el = toode.toString();
-            converditud[i] = c_el;
-        }
-        return converditud;
+        ostukorv(tooted_failist_meetodisse("tooted.txt"));
     }
 
-    //See meetod teeb Küsib kasutajalt tootedi, mida ostukorvi lisada, ning lisab need
-    //koos hindadega eraldi massiivi
-    public static void ostukorv(String[][] tooted, boolean faas) throws FileNotFoundException {
+    //Lühidalt: tegu on programmi n.ö kehaga (meetod ostukorv()), mis kasutab loodud meetodeid, et:
+    // 1)Küsida kasutajalt soovitud tooteid koos kogustega
+    // 2)Arvutada kokkumineva summa (eurodes)
+    // 3)Teha paus, kuni kasutaja sisestab "Enteri" (et poodi jõuda)
+    // 4)Väljastada valitud toodete nimekiri, kus kasutaja saab ära märkida korvi võetud tooted
+
+    //Antud etappidele viitame eeltoodud järjekorranumbritega ("faas" + järjekorranumber (nt faas 1)))
+    public static void ostukorv(String[][] tooted) throws FileNotFoundException {
         ArrayList<String> valikud = new ArrayList<>();
 
         boolean toe = true;
 
-        if(faas) {
-            while (toe) {
-                System.out.println("==========Tooted============");
-                for (String[] el : tooted) {
-                    Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
-                    System.out.println(toode.toString());
-                }
-                System.out.println("============================");
-                System.out.println("Valimiseks kirjuta toote nimi, kui valmis kirjuta (OK): ");
-                Scanner scan = new Scanner(System.in);
-                String vastus = scan.nextLine().toUpperCase();
+        //faas 1)
+        while (toe) {
+            System.out.println("==========Tooted============");
+            for (String[] el : tooted) {
+                Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
+                System.out.println(toode.toString());
+            }
+            System.out.println("============================");
+            System.out.println("Valimiseks kirjuta toote nimi, kui valmis kirjuta (OK): ");
+            Scanner scan = new Scanner(System.in);
+            String vastus = scan.nextLine().toUpperCase();
 
-                if (Objects.equals(vastus, "OK")) {
-                    toe = false;
+            if (Objects.equals(vastus, "OK")) {
+                toe = false;
 
-                } else {
-                    if (kas_on_olemas(vastus, tooted_failist_meetodisse("tooted.txt"))) {
-                        System.out.println("Kogus: ");
-                        int kogus = scan.nextInt();
-                        for (int j = 0; j < kogus; j++) {
-                            valikud.add(vastus);
-                        }
-                        toe = true;
-                    } else {
-                        System.out.println("Toodet ei leitud :(");
+            } else {
+                if (kas_on_olemas(vastus, tooted_failist_meetodisse("tooted.txt"))) {
+                    System.out.println("Kogus: ");
+                    int kogus = scan.nextInt();
+                    for (int j = 0; j < kogus; j++) {
+                        valikud.add(vastus);
                     }
+                    toe = true;
+                } else {
+                    System.out.println("Toodet ei leitud :(");
                 }
             }
         }
@@ -83,6 +76,7 @@ public class Proto {
         }
         System.out.println("============================");
 
+        //faas 2)
         double kokku = 0.0;
         for (String[] el : ostukorvi) {
             Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
@@ -93,10 +87,12 @@ public class Proto {
 
         System.out.println("_____________________________");
 
+        //faas 3)
         Scanner sisestus = new Scanner(System.in);
         System.out.println("!Jätkamiseks vajutage ENTERit!");
         sisestus.nextLine();
 
+        //faas 4)
         while (true) {
             int n = 1;
             System.out.println("Lisan korvi toote number: ");
@@ -134,6 +130,18 @@ public class Proto {
         }
     }
 
+    //See meetod loob valitud toodetest eraldi ühe-dimensioonilise massiivi (programmi järmises faasis vajalik)
+    public static String[] ostukorvi_converter(String[][] ostukorv) {
+        String[] converditud = new String[ostukorv.length];
+
+        for (int i = 0; i < ostukorv.length; i++) {
+            Andmed toode = new Andmed(ostukorv[i][0], Double.parseDouble(ostukorv[i][1]));
+            String c_el = toode.toString();
+            converditud[i] = c_el;
+        }
+        return converditud;
+    }
+
     //meetod mis paneb failis olevad tooted koos hinnaga eraldi massiivi(tootenimi, hind)
     public static String[][] tooted_failist_meetodisse(String failinimi) throws FileNotFoundException {
         //Viib failis olema esmalt ühe dimensioonilisesse massiivi
@@ -161,6 +169,7 @@ public class Proto {
     }
 
     //See meetod leiab faili ridade arvu(ehk toodete arvu)
+    //Vajalik massiivi pikkuse määramiseks
     public static int ridade_arv(String failinimi) throws FileNotFoundException {
         int rida = 0;
         File fail = new File(failinimi);
@@ -172,7 +181,7 @@ public class Proto {
         return rida;
     }
 
-    //See meetod teeb kindlaks, kas antud element(String) on massiivis olemas
+    //See meetod teeb kindlaks, kas antud element(String) on massiivis (antud kontekstis toodete seas) olemas
     public static boolean kas_on_olemas(String toode, String[][] tooted) {
         boolean vastus = false;
         for (String[] el : tooted) {

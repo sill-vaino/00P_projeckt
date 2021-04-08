@@ -13,9 +13,11 @@ public class Andmed {
     public double getHind() {
         return Hind;
     }
+    //Tulevikus antud programmi arendamisel saab seda rakendada
     public void setToode(String toode) {
         Toode = toode;
     }
+    //Tulevikus antud programmi arendamisel saab seda rakendada
     public void setHind(double hind) {
         Hind = hind;
     }
