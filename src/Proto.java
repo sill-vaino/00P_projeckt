@@ -7,7 +7,9 @@ import java.util.Scanner; // et tekstifaile lugeda
 
 public class Proto {
     //peameetod
-    public static void main(String[] args) throws FileNotFoundException {
+
+
+    public static void käivita() throws FileNotFoundException {
         String[][] ostukorv = ostukorv(tooted_failist_meetodisse("tooted.txt"));
         String[] converditud = ostukorvi_converter(ostukorv);
         faas(converditud);
@@ -30,7 +32,8 @@ public class Proto {
         System.out.println("============================");
 
         boolean toene = true;
-        while (toene) {
+
+        while (true) {
             int n = 1;
             System.out.println("Lisan korvi toote number: ");
             Scanner scan = new Scanner(System.in);
@@ -40,7 +43,7 @@ public class Proto {
 
             if (foo == 0) { //Kui sisestad "0", siis programm lõpetab töö
                 System.out.println("!!!Programm katkestati!!!");
-                toene = false;
+                return;
             }else if (foo > converditud.length){
                 System.out.println("!!Sellist toodet ei eksisteeri!!");
 
@@ -61,7 +64,7 @@ public class Proto {
                 }
                 if (f == converditud.length) {
                     System.out.println("!Kõik tooted on korvis!" +" \n" + "Suunduge kassasse");
-                    toene = false;
+                    return;
                 }
             }
         }
