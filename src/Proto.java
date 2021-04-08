@@ -128,7 +128,7 @@ public class Proto {
                 }
                 if (f == converditud.length) {
                     System.out.println("!Kõik tooted on korvis!" +" \n" + "Suunduge kassasse");
-                    //return ostukorvi;
+                    return;
                 }
             }
         }
