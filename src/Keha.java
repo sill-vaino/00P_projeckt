@@ -88,38 +88,43 @@ public class Keha {
 
         //faas 4)
         while (true) {
+
             int n = 1;
             System.out.println("Lisan korvi toote number: ");
             Scanner scan = new Scanner(System.in);
             String vastus = scan.nextLine();
-            int foo = Integer.parseInt(vastus);
-            int f = 0;
+            try {
+                int foo = Integer.parseInt(vastus);
+                int f = 0;
 
-            if (foo == 0) { //Kui sisestad "0", siis programm lõpetab töö
+
+                if (foo == 0) { //Kui sisestad "0", siis programm lõpetab töö
                 System.out.println("!!!Programm katkestati!!!");
                 return;
-            }else if (foo > converditud.length){
+                }else if (foo > converditud.length){
                 System.out.println("!!Sellist toodet ei eksisteeri!!");
 
-            } else if (converditud[foo - 1].contains("+")) {
+                } else if (converditud[foo - 1].contains("+")) {
                 System.out.println("!See toode on juba korvis!");
-            } else {
-                converditud[foo - 1] += " +";
-                System.out.println("========OSTUNIMEKIRI=======");
-                for (String el : converditud) {
-                    System.out.println(n + "." + el);
-                    n++;
-                }
-                System.out.println("============================");
-                for (String el : converditud) {
-                    if (el.contains("+")) {
-                        f++;
+                } else {
+                    converditud[foo - 1] += " +";
+                    System.out.println("========OSTUNIMEKIRI=======");
+                    for (String el : converditud) {
+                        System.out.println(n + "." + el);
+                        n++;
                     }
-                }
-                if (f == converditud.length) {
-                    System.out.println("!Kõik tooted on korvis!" +" \n" + "Suunduge kassasse");
-                    return;
-                }
+                    System.out.println("============================");
+                    for (String el : converditud) {
+                        if (el.contains("+")) {
+                         f++;
+                        }
+                    }
+                    if (f == converditud.length) {
+                        System.out.println("!Kõik tooted on korvis!" + " \n" + "Suunduge kassasse");
+                        return;
+                }   }
+            }catch (NumberFormatException e) {
+                System.out.println("Tähti siin lisada ei saa!");
             }
         }
     }
