@@ -38,11 +38,11 @@ public class Proto {
                     System.out.println(toode.toString());
                 }
                 System.out.println("============================");
-                System.out.println("Toode: ");
+                System.out.println("Valimiseks kirjuta toote nimi, kui valmis kirjuta (OK): ");
                 Scanner scan = new Scanner(System.in);
                 String vastus = scan.nextLine().toUpperCase();
 
-                if (Objects.equals(vastus, "EI")) {
+                if (Objects.equals(vastus, "OK")) {
                     toe = false;
 
                 } else {
@@ -107,7 +107,7 @@ public class Proto {
 
             if (foo == 0) { //Kui sisestad "0", siis programm lõpetab töö
                 System.out.println("!!!Programm katkestati!!!");
-                //return ostukorvi;
+                return;
             }else if (foo > converditud.length){
                 System.out.println("!!Sellist toodet ei eksisteeri!!");
 
