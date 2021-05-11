@@ -156,10 +156,10 @@ public class Keha {
                 }else if (foo > valitud_tooted.size()){
                     System.out.println("!!Sellist toodet ei eksisteeri!!");
 
-                } else if (converditud[foo - 1].contains("+")) {
+                } else if (converditud[foo - 1].contains("✓")) {
                     System.out.println("!See toode on juba korvis!");
                 } else {
-                    converditud[foo - 1] += " +";
+                    converditud[foo - 1] += " ✓";
                     System.out.println("========OSTUNIMEKIRI=======");
                     for (String el : converditud) {
                         System.out.println(n + "." + el);
@@ -167,7 +167,7 @@ public class Keha {
                     }
                     System.out.println("============================");
                     for (String el : converditud) {
-                        if (el.contains("+")) {
+                        if (el.contains("✓")) {
                             f++;
                         }
                     }
