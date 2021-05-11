@@ -1,0 +1,10 @@
+Hernesupp; 1.3
+Pringles; 2.3
+Löfbergs kohv; 4.5
+Jäätis; 0.9
+Hapukurk; 2.75
+Lihapihvid; 1.6
+Burn; 0.7
+Limpa limonaad; 0.69
+Snickers; 0.6
+Twix; 0.55
