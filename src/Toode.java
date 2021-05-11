@@ -1,9 +1,9 @@
-public class Andmed {
+public class Toode {
 
     private String Toode;
     private double Hind;
 
-    public Andmed(String Toode, double Hind) {
+    public Toode(String Toode, double Hind) {
         this.Toode = Toode;
         this.Hind = Hind;
     }
@@ -13,10 +13,6 @@ public class Andmed {
     }
     public double getHind() {
         return Hind;
-    }
-    //Tulevikus antud programmi arendamisel saab seda rakendada
-    public void setToode(String toode) {
-        Toode = toode;
     }
     //Tulevikus antud programmi arendamisel saab seda rakendada
     public void setHind(double hind) {

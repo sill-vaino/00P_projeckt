@@ -1,9 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 import java.util.Scanner;
-
 
 public class Keha {
     //Lühidalt: tegu on programmi n.ö kehaga (meetod ostukorv()), mis kasutab loodud meetodeid, et:
@@ -13,71 +12,123 @@ public class Keha {
     // 4)Väljastada valitud toodete nimekiri, kus kasutaja saab ära märkida korvi võetud tooted
 
     //Antud etappidele viitame eeltoodud järjekorranumbritega ("faas" + järjekorranumber (nt faas 1)))
-    public static void ostukorv(String[][] tooted) throws FileNotFoundException {
+
+    //Meetod küsib kasutajalt eelistatud poodi
+    public static void milline_pood() throws PolePoodiError, FileNotFoundException{
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Millist poodi sooviksite külastada? (Rimi, Coop, Selver)");
+        String vastus = scan.nextLine();
+
+        if(vastus.equalsIgnoreCase("Rimi")) {
+            Scanner scannn = new Scanner(System.in);
+            System.out.println("Kas teil rimi kaarti on? ('jah', 'ei')");
+            String kaart = scannn.nextLine();
+            boolean t = true;
+
+            while(t)
+                if(kaart.equalsIgnoreCase("jah")) {
+                    ostukorv(soodukatega(tooted_failist_meetodisse("rimi.txt"),50, 5));
+                    t = false;
+                }
+                else if(kaart.equalsIgnoreCase("ei")) {
+                    ostukorv(tooted_failist_meetodisse("rimi.txt"));
+                    t = false;
+                }
+                else {
+                    System.out.println("Sisestage kas 'jah' või 'ei' !");
+                }
+        }
+        else if(vastus.equalsIgnoreCase("Coop")) {
+            Scanner scannn = new Scanner(System.in);
+            System.out.println("Kas teil säästukaarti on? ('jah', 'ei')");
+            String kaart = scannn.nextLine();
+            boolean t = true;
+
+            while(t)
+                if(kaart.equalsIgnoreCase("jah")) {
+                    ostukorv(soodukatega(tooted_failist_meetodisse("coop.txt"),50, 5));
+                    t = false;
+                }
+                else if(kaart.equalsIgnoreCase("ei")) {
+                    ostukorv(tooted_failist_meetodisse("coop.txt"));
+                    t = false;
+                }
+                else {
+                    System.out.println("Sisestage kas 'jah' või 'ei' !");
+                }
+        }
+        else if(vastus.equalsIgnoreCase("Selver")) {
+            Scanner scannn = new Scanner(System.in);
+            System.out.println("Kas teil partnerkaarti on? ('jah', 'ei')");
+            String kaart = scannn.nextLine();
+            boolean t = true;
+
+            while(t)
+                if(kaart.equalsIgnoreCase("jah")) {
+                    ostukorv(soodukatega(tooted_failist_meetodisse("selver.txt"),50, 5));
+                    t = false;
+                }
+                else if(kaart.equalsIgnoreCase("ei")) {
+                    ostukorv(tooted_failist_meetodisse("selver.txt"));
+                    t = false;
+                }
+                else {
+                    System.out.println("Sisestage kas 'jah' või 'ei' !");
+                }
+        }
+        else {
+            throw new PolePoodiError("Antud pood pole saadaval :(");
+        }
+    }
+
+    public static void ostukorv(List<Toode> tooted){
         ArrayList<String> valikud = new ArrayList<>();
 
+        //faas 1)
         boolean toe = true;
 
-        //faas 1)
         while (toe) {
             System.out.println("==========Tooted============");
-            for (String[] el : tooted) {
-                Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
-                System.out.println(toode.toString());
+            for (Toode el : tooted) {
+                System.out.println(el.toString());
             }
+
             System.out.println("============================");
             System.out.println("Valimiseks kirjuta toote nimi, kui valmis kirjuta (OK): ");
             Scanner scan = new Scanner(System.in);
-            String vastus = scan.nextLine().toUpperCase();
+            String vastus = scan.nextLine();
 
-            if (Objects.equals(vastus, "OK")) {
+            if (vastus.equalsIgnoreCase("OK")) {
                 toe = false;
 
-            } else {
-                if (kas_on_olemas(vastus, tooted_failist_meetodisse("tooted.txt"))) {
+            }
+            else {
+                if (kas_on_olemas(vastus, tooted)) {
                     System.out.println("Kogus: ");
                     int kogus = scan.nextInt();
                     for (int j = 0; j < kogus; j++) {
                         valikud.add(vastus);
                     }
                     toe = true;
-                } else {
+                }
+                else {
                     System.out.println("Toodet ei leitud :(");
                 }
             }
         }
 
-        String[][] ostukorvi = new String[valikud.size()][2];
-
-        for (String[] el : tooted) {
-            for (int i = 0; i < valikud.size(); i++) {
-                if (el[0].equals(valikud.get(i))) {
-                    Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
-                    ostukorvi[i][0] = toode.getToode();
-                    ostukorvi[i][1] = String.valueOf(toode.getHind());
-                }
-            }
-        }
-        String[] converditud = ostukorvi_converter(ostukorvi);
+        List<Toode> valitud_tooted = valitud_tooted(valikud, tooted);
 
         System.out.println("====Tooted on lisatud ostukorvi====");
-
-        int i = 1;
         System.out.println("========OSTUNIMEKIRI=======");
-        for (String el : converditud) {
-            System.out.println(i + "." + el);
-            i++;
+        int j = 1;
+        for (Toode toode : valitud_tooted) {
+            System.out.println(j + "." + toode.toString());
+            j++;
         }
         System.out.println("============================");
+        System.out.println("Kokku: " + kokku(valitud_tooted) + " €");
 
-        //faas 2)
-        double kokku = 0.0;
-        for (String[] el : ostukorvi) {
-            Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
-            kokku = kokku + toode.getHind();
-        }
-
-        System.out.println("Kokku: " + Math.round(kokku * 100.00) / 100.00 + " €");
 
         System.out.println("_____________________________");
 
@@ -87,6 +138,7 @@ public class Keha {
         sisestus.nextLine();
 
         //faas 4)
+        String[] converditud = convert(valitud_tooted);
         while (true) {
 
             int n = 1;
@@ -99,13 +151,13 @@ public class Keha {
 
 
                 if (foo == 0) { //Kui sisestad "0", siis programm lõpetab töö
-                System.out.println("!!!Programm katkestati!!!");
-                return;
-                }else if (foo > converditud.length){
-                System.out.println("!!Sellist toodet ei eksisteeri!!");
+                    System.out.println("!!!Programm katkestati!!!");
+                    return;
+                }else if (foo > valitud_tooted.size()){
+                    System.out.println("!!Sellist toodet ei eksisteeri!!");
 
                 } else if (converditud[foo - 1].contains("+")) {
-                System.out.println("!See toode on juba korvis!");
+                    System.out.println("!See toode on juba korvis!");
                 } else {
                     converditud[foo - 1] += " +";
                     System.out.println("========OSTUNIMEKIRI=======");
@@ -116,79 +168,87 @@ public class Keha {
                     System.out.println("============================");
                     for (String el : converditud) {
                         if (el.contains("+")) {
-                         f++;
+                            f++;
                         }
                     }
                     if (f == converditud.length) {
                         System.out.println("!Kõik tooted on korvis!" + " \n" + "Suunduge kassasse");
                         return;
-                }   }
+                    }   }
             }catch (NumberFormatException e) {
                 System.out.println("Tähti siin lisada ei saa!");
             }
         }
     }
 
-    //See meetod loob valitud toodetest eraldi ühe-dimensioonilise massiivi (programmi järmises faasis vajalik)
-    public static String[] ostukorvi_converter(String[][] ostukorv) {
-        String[] converditud = new String[ostukorv.length];
+    //Antud meetod loob valitud toodete põhjal uue List<Toode>
+    public static List<Toode> valitud_tooted(ArrayList<String> valikud, List<Toode> tooted) {
+        List<Toode> valitud_tooted = new ArrayList<>();
 
-        for (int i = 0; i < ostukorv.length; i++) {
-            Andmed toode = new Andmed(ostukorv[i][0], Double.parseDouble(ostukorv[i][1]));
-            String c_el = toode.toString();
-            converditud[i] = c_el;
+        for (Toode toode : tooted) {
+            for (String valik : valikud) {
+                if(valik.equalsIgnoreCase(toode.getToode())) {
+                    valitud_tooted.add(new Toode(toode.getToode(), toode.getHind()));
+                }
+            }
+        }
+        return valitud_tooted;
+    }
+
+    //Meetod viib List<Toode> mugavamale kujule (ostukorv()is vajalik)
+    public static String[] convert(List<Toode> tooted) {
+        String[] converditud = new String[tooted.size()];
+
+        for (int i = 0; i < tooted.size(); i++) {
+            converditud[i] = tooted.get(i).toString();
         }
         return converditud;
     }
 
-    //meetod mis paneb failis olevad tooted koos hinnaga eraldi massiivi(tootenimi, hind)
-    public static String[][] tooted_failist_meetodisse(String failinimi) throws FileNotFoundException {
-        //Viib failis olema esmalt ühe dimensioonilisesse massiivi
+    //meetod arvutab antud toodete kokkumineva summa (eurodes)
+    public static double kokku(List<Toode> tooted) {
+        double kokku = 0;
+        for (Toode toode : tooted) {
+            kokku += toode.getHind();
+        }
+        return Math.round(kokku * 100.00) / 100.00;
+    }
+
+    //meetod mis paneb failis olevad tooted koos hinnaga eraldi listi(tootenimi, hind)
+    public static List<Toode> tooted_failist_meetodisse(String failinimi) throws FileNotFoundException {
+        //Lisab failis olevad tooted(toote nimi, hind) toodete listi
         File fail = new File(failinimi);
-        String[] tooted_1 = new String[ridade_arv(failinimi)];
-        try (java.util.Scanner lugeja = new java.util.Scanner(fail, "UTF-8")) {
+        List<Toode> tooted = new ArrayList<>();
+
+        try (Scanner lugeja = new Scanner(fail, "UTF-8")) {
             while (lugeja.hasNextLine()) {
-                for (int i = 0; i < ridade_arv(failinimi); i++) {
-                    String toode = lugeja.nextLine();
-                    tooted_1[i] = toode;
-                }
+                String rida = lugeja.nextLine();
+                String[] jupid = rida.split("; ");
+                tooted.add(new Toode(jupid[0], Double.parseDouble(jupid[1])));
             }
-            lugeja.close();
-
-            //Viib ühe dimensioonilise massiivi kahe dimensioonilise massiivi kujule
-            String[][] tooted = new String[ridade_arv(failinimi)][2];
-            for (int i = 0; i < ridade_arv(failinimi); i++) {
-                String[] el = tooted_1[i].split("; ");
-                Andmed toode = new Andmed(el[0], Double.parseDouble(el[1]));
-                tooted[i][0] = toode.getToode().toUpperCase();
-                tooted[i][1] = String.valueOf(toode.getHind());
-            }
-            return tooted;
         }
+        return tooted;
     }
 
-    //See meetod leiab faili ridade arvu(ehk toodete arvu)
-    //Vajalik massiivi pikkuse määramiseks
-    public static int ridade_arv(String failinimi) throws FileNotFoundException {
-        int rida = 0;
-        File fail = new File(failinimi);
-        Scanner lugeja = new Scanner(fail);
-        while (lugeja.hasNextLine()) {
-            lugeja.nextLine();
-            rida++;
-        }
-        return rida;
-    }
-
-    //See meetod teeb kindlaks, kas antud element(String) on massiivis (antud kontekstis toodete seas) olemas
-    public static boolean kas_on_olemas(String toode, String[][] tooted) {
+    //See meetod teeb kindlaks, kas antud element(String) on listis (antud kontekstis toodete seas) olemas
+    public static boolean kas_on_olemas(String toode, List<Toode> tooted) {
         boolean vastus = false;
-        for (String[] el : tooted) {
-            if (el[0].equals(toode)) {
+        for (Toode el : tooted) {
+            if (el.getToode().equalsIgnoreCase(toode)) {
                 vastus = true;
                 break;
             }
         }
         return vastus;
+    }
+
+    public static List<Toode> soodukatega(List<Toode> tooted, int max, int min) {
+        for (Toode toode : tooted) {
+            int juhu_percent = (int)(Math.random() * ((max - min) + 1)) + min;
+            double allahindus = (toode.getHind() * juhu_percent) / 100;
+            double uus_hind = Math.round((toode.getHind() - allahindus) * 100.0) / 100.0;
+            toode.setHind(uus_hind);
+        }
+        return tooted;
     }
 }
