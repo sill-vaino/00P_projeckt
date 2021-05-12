@@ -1,7 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Keha {
@@ -17,67 +20,33 @@ public class Keha {
     public static void milline_pood() throws PolePoodiError, FileNotFoundException{
         Scanner scan = new Scanner(System.in);
         System.out.println("Millist poodi sooviksite külastada? (Rimi, Coop, Selver)");
-        String vastus = scan.nextLine();
+        String vastus = scan.nextLine().toLowerCase(Locale.ROOT);
+        Scanner scannn = new Scanner(System.in);
 
-        if(vastus.equalsIgnoreCase("Rimi")) {
-            Scanner scannn = new Scanner(System.in);
-            System.out.println("Kas teil rimi kaarti on? ('jah', 'ei')");
-            String kaart = scannn.nextLine();
-            boolean t = true;
-
-            while(t)
-                if(kaart.equalsIgnoreCase("jah")) {
-                    ostukorv(soodukatega(tooted_failist_meetodisse("rimi.txt"),50, 5));
-                    t = false;
-                }
-                else if(kaart.equalsIgnoreCase("ei")) {
-                    ostukorv(tooted_failist_meetodisse("rimi.txt"));
-                    t = false;
-                }
-                else {
-                    System.out.println("Sisestage kas 'jah' või 'ei' !");
-                }
+        switch (vastus) {
+            case("coop"):
+                System.out.println("Kas teil säästukaarti kaarti on? ('jah', 'ei')");
+                break;
+            case("rimi"):
+                System.out.println("Kas teil rimikaarti kaarti on? ('jah', 'ei')");
+                break;
+            case("selver"):
+                System.out.println("Kas teil partnerkaart kaarti on? ('jah', 'ei')");
+                break;
         }
-        else if(vastus.equalsIgnoreCase("Coop")) {
-            Scanner scannn = new Scanner(System.in);
-            System.out.println("Kas teil säästukaarti on? ('jah', 'ei')");
-            String kaart = scannn.nextLine();
-            boolean t = true;
+        String kaart = scannn.nextLine();
 
-            while(t)
-                if(kaart.equalsIgnoreCase("jah")) {
-                    ostukorv(soodukatega(tooted_failist_meetodisse("coop.txt"),50, 5));
-                    t = false;
-                }
-                else if(kaart.equalsIgnoreCase("ei")) {
-                    ostukorv(tooted_failist_meetodisse("coop.txt"));
-                    t = false;
-                }
-                else {
-                    System.out.println("Sisestage kas 'jah' või 'ei' !");
-                }
+        while(!kaart.equalsIgnoreCase("jah") && !kaart.equalsIgnoreCase("ei")) {
+            System.out.println("Sisestage kas 'jah' või 'ei' !");
+            kaart = scannn.nextLine();
         }
-        else if(vastus.equalsIgnoreCase("Selver")) {
-            Scanner scannn = new Scanner(System.in);
-            System.out.println("Kas teil partnerkaarti on? ('jah', 'ei')");
-            String kaart = scannn.nextLine();
-            boolean t = true;
 
-            while(t)
-                if(kaart.equalsIgnoreCase("jah")) {
-                    ostukorv(soodukatega(tooted_failist_meetodisse("selver.txt"),50, 5));
-                    t = false;
-                }
-                else if(kaart.equalsIgnoreCase("ei")) {
-                    ostukorv(tooted_failist_meetodisse("selver.txt"));
-                    t = false;
-                }
-                else {
-                    System.out.println("Sisestage kas 'jah' või 'ei' !");
-                }
+        //See on näitamaks, et programm töötab
+        if(kaart.equalsIgnoreCase("jah")) {
+            ostukorv(soodukatega(tooted_failist(vastus + ".txt"), 50, 5));
         }
         else {
-            throw new PolePoodiError("Antud pood pole saadaval :(");
+            ostukorv(tooted_failist(vastus + ".txt"));
         }
     }
 
@@ -134,7 +103,7 @@ public class Keha {
 
         //faas 3)
         Scanner sisestus = new Scanner(System.in);
-        System.out.println("!Jätkamiseks vajutage ENTERit!");
+        System.out.println("!Jätkamiseks vajutage suvalist klahvi!");
         sisestus.nextLine();
 
         //faas 4)
@@ -173,6 +142,8 @@ public class Keha {
                     }
                     if (f == converditud.length) {
                         System.out.println("!Kõik tooted on korvis!" + " \n" + "Suunduge kassasse");
+                        System.out.println("============================");
+                        tsekk(valitud_tooted);
                         return;
                     }   }
             }catch (NumberFormatException e) {
@@ -215,7 +186,7 @@ public class Keha {
     }
 
     //meetod mis paneb failis olevad tooted koos hinnaga eraldi listi(tootenimi, hind)
-    public static List<Toode> tooted_failist_meetodisse(String failinimi) throws FileNotFoundException {
+    public static List<Toode> tooted_failist(String failinimi) throws FileNotFoundException {
         //Lisab failis olevad tooted(toote nimi, hind) toodete listi
         File fail = new File(failinimi);
         List<Toode> tooted = new ArrayList<>();
@@ -250,5 +221,32 @@ public class Keha {
             toode.setHind(uus_hind);
         }
         return tooted;
+    }
+
+    public static void tsekk(List<Toode> ostukorv) {
+        try {
+            File uus_fail = new File("tsekk.txt");
+
+            if(uus_fail.exists()) {
+                uus_fail.delete();
+            }
+
+            if(uus_fail.createNewFile()) {
+                FileWriter kirjutaja = new FileWriter(uus_fail);
+                for (Toode toode : ostukorv) {
+                    kirjutaja.write(toode.toString() + "\n");
+                }
+                kirjutaja.write("===========================");
+                kirjutaja.write("\n" + "Kokku: " + kokku(ostukorv) + " €");
+                kirjutaja.close();
+                System.out.println("Tsekk koostatud!");
+            }
+            else {
+                System.out.println("Fail on juba olemas!");
+            }
+        } catch (IOException e) {
+            System.out.println("Viga!");
+            e.printStackTrace();
+        }
     }
 }
